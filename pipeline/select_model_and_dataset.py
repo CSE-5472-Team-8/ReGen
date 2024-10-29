@@ -67,7 +67,7 @@ def manually_select_model_and_dataset_id(api):
     Returns:
         tuple: A tuple containing the valid model ID and dataset ID.
     """
-    model_id = get_valid_input("\nEnter the text-to-image model id: ", lambda x: validate_model_id(api, x))
+    model_id = get_valid_input("\nEnter the text-to-image model ID: ", lambda x: validate_model_id(api, x))
     dataset_id = get_valid_input("\nEnter the dataset ID: ", lambda x: validate_dataset_id(api, x))
     return model_id, dataset_id
 
