@@ -86,7 +86,8 @@ class ImageEmbedder:
                         processed_samples += 1
 
 def run(dataset_id):
-    embedding_dir = "./data/clip_embeddings"
+    embedding_dir = f"./data/clip_embeddings/{dataset_id.replace('/', '_')}"
     embedder = ImageEmbedder(dataset_id, embedding_dir)
     
-    embedder.process_images_in_batches(batch_size=10, total_samples=100, max_workers=2)
+    embedder.process_images_in_batches(batch_size=10, total_samples=30, max_workers=2)
+
