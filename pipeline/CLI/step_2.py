@@ -34,7 +34,7 @@ def setup_dataset(dataset_id):
         selected_features = manually_select_features(feature_types_to_detect)
         confirmed_choice = confirm_feature_detection(selected_features)
 
-    print(confirmed_choice)
+    return confirmed_choice
 
 
 def select_dataset_type():

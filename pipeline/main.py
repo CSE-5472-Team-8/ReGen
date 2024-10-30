@@ -8,7 +8,7 @@ if __name__ == "__main__":
     model_id, dataset_id = select_model_and_dataset()
 
     # Step 2: Get information about the dataset from the user.
-    execution_mode = setup_dataset(dataset_id)
+    feature_names = setup_dataset(dataset_id)
 
     # Step 3: Generate CLIP embeddings for all images in the dataset.
     # get_clip_embeddings.run(dataset_id)
