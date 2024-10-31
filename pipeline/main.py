@@ -1,7 +1,6 @@
 from CLI.step_1 import select_model_and_dataset
 from CLI.step_2 import setup_dataset
-
-# from step_2 import get_clip_embeddings
+from step_2 import get_clip_embeddings
 
 if __name__ == "__main__":
     # Step 1: Choose the model you wish to run the model inversion attack on, and the dataset it was trained on.
@@ -11,7 +10,7 @@ if __name__ == "__main__":
     feature_names = setup_dataset(dataset_id)
 
     # Step 3: Generate CLIP embeddings for all images in the dataset.
-    # get_clip_embeddings.run(dataset_id)
+    get_clip_embeddings.run(dataset_id, feature_names)
 
     # Step 3: Identify the most duplicated images in the dataset.
 

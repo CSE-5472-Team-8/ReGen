@@ -1,5 +1,5 @@
 from CLI.helpers import get_valid_input, confirm_choice
-from step_2 import get_dataset_size
+from step_2 import get_dataset_size_bytes
 from huggingface_hub import dataset_info
 
 def setup_dataset(dataset_id):
@@ -10,11 +10,10 @@ def setup_dataset(dataset_id):
         dataset_id (str): The unique identifier of the dataset.
 
     Returns:
-        
-        TODO - ADD EXECUTION_MODE RETURN TYPE
-
+        dict: A dictionary mapping feature types (e.g., "image", "caption") to confirmed feature names, 
+        either detected from the dataset or specified by the user.
     """
-    dataset_size = get_dataset_size.run(dataset_id)
+    dataset_size = get_dataset_size_bytes.run(dataset_id)
     dataset_type = select_dataset_type()
     features = fetch_dataset_features(dataset_id)
 
@@ -25,16 +24,16 @@ def setup_dataset(dataset_id):
     }
 
     feature_types_to_detect = {feature_type: None for feature_type in dataset_feature_types.get(dataset_type, [])}
-    confirmed_choice = None
+    feature_names = None
 
     if features:
-        detected_features = detect_features(features, feature_types_to_detect)
-        confirmed_choice = confirm_feature_detection(detected_features)
+        detected_feature_names = detect_features(features, feature_types_to_detect)
+        feature_names = confirm_feature_detection(detected_feature_names)
     else:
-        selected_features = manually_select_features(feature_types_to_detect)
-        confirmed_choice = confirm_feature_detection(selected_features)
+        selected_feature_names = manually_select_features(feature_types_to_detect)
+        feature_names = confirm_feature_detection(selected_feature_names)
 
-    return confirmed_choice
+    return feature_names
 
 
 def select_dataset_type():
