@@ -1,5 +1,5 @@
 import torch
-import clip
+from clip import load
 from PIL import Image
 import numpy as np
 import requests
@@ -10,6 +10,7 @@ from datasets import load_dataset
 from huggingface_hub import login
 from dotenv import load_dotenv
 from step_2 import get_dataset_size_rows
+import warnings
 
 class ImageEmbedder:
     def __init__(self, dataset_id, embedding_dir, feature_names, max_batch_size_gb=2):
@@ -22,8 +23,11 @@ class ImageEmbedder:
             feature_names (dict): Feature names to identify images, captions, and URLs in the dataset.
             max_batch_size_gb (int, optional): Maximum batch size in gigabytes. Defaults to 2.
         """
+        # Suppress specific warning related to flash attention
+        warnings.filterwarnings("ignore", message=".*not compiled with flash attention.*")
+        
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        self.model, self.preprocess = clip.load("ViT-B/32", device=self.device)
+        self.model, self.preprocess = load("ViT-B/32", device=self.device)
         self.dataset = load_dataset(dataset_id, split="train", streaming=True)
         self.dataset_num_rows = get_dataset_size_rows.run(dataset_id)
         self.embedding_dir = embedding_dir
@@ -81,6 +85,11 @@ class ImageEmbedder:
         """
         os.makedirs(self.embedding_dir, exist_ok=True)
 
+        # Check if embeddings already exist
+        if any(file.endswith(".npz") for file in os.listdir(self.embedding_dir)):
+            print("\nCLIP embeddings have already been generated. Skipping to the next step...\n")
+            return
+
         load_dotenv()
         login(token=os.getenv('HUGGINGFACE_TOKEN'))
 
@@ -90,6 +99,7 @@ class ImageEmbedder:
 
         scenario = self.determine_scenario()
 
+        print("\nDownloading training data...")
         for example_index, example in enumerate(tqdm(self.dataset, total=total_samples)):
             if scenario == 1 and self.feature_names["image"] in example and self.feature_names["caption"] in example:
                 image = example[self.feature_names["image"]]
@@ -106,6 +116,7 @@ class ImageEmbedder:
                 batch.append({"image": None, "image_url": image_url, "caption": caption, "index": example_index})
 
             if len(batch) == batch_size or batch_size_bytes >= self.max_batch_size_bytes:
+                print(f"\n\nSaving embeddings for batch of size: {len(batch)}\n")
                 for sample in batch:
                     image = sample.get("image")
                     image_url = sample.get("image_url")
@@ -125,6 +136,7 @@ class ImageEmbedder:
                 break
 
         if batch:
+            print(f"\nSaving embeddings for final batch of size: {len(batch)}\n")
             for sample in batch:
                 image = sample.get("image")
                 image_url = sample.get("image_url")
@@ -163,4 +175,6 @@ def run(dataset_id, feature_names):
     embedding_dir = f"./data/clip_embeddings/{dataset_id.replace('/', '_')}"
     embedder = ImageEmbedder(dataset_id, embedding_dir, feature_names)
     
-    embedder.process_images_in_batches(batch_size=1000, total_samples=embedder.dataset_num_rows)
+    embedder.process_images_in_batches(batch_size=5000, total_samples=embedder.dataset_num_rows)
+
+    return embedding_dir

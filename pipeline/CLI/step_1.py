@@ -3,6 +3,8 @@ from step_1 import get_model_and_dataset_pairs
 import os
 import csv
 from CLI.helpers import get_valid_input, confirm_choice
+import pyfiglet
+import shutil
 
 def validate_model_id(api, model_id):
     """
@@ -134,6 +136,17 @@ def select_model_and_dataset():
         tuple: The selected model ID and dataset ID.
     """
     api = HfApi()
+
+    ascii_art = pyfiglet.figlet_format('ReGen', font='dos_rebel')
+
+    print('\nWelcome to\n')
+    print(ascii_art.strip())
+    print('\nThis tool performs automated white-box Model Inversion Attacks (MIA) on any HuggingFace text-to-image model.')
+    print('You will need the model ID, the dataset ID it was trained on, an API key with access to both, and any additional information requested by the program.')
+    print('\nDisclaimer: This tool is intended for educational purposes only. It was created to demonstrate the concept of MIAs and should not be used for unauthorized or malicious activities. Please use responsibly.')
+
+    console_width = shutil.get_terminal_size((80, 20)).columns
+    print("=" * console_width)
 
     print("\n1) Manually choose a text-to-image model and dataset.")
     print("2) Select text-to-image model and dataset from list.")
