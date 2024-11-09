@@ -173,8 +173,8 @@ def run(dataset_id, feature_names):
         feature_names (dict): Feature names for identifying image, caption, and image URL in the dataset.
     """
     embedding_dir = f"./data/clip_embeddings/{dataset_id.replace('/', '_')}"
-    embedder = ImageEmbedder(dataset_id, embedding_dir, feature_names)
     
+    embedder = ImageEmbedder(dataset_id, embedding_dir, feature_names)
     embedder.process_images_in_batches(batch_size=5000, total_samples=embedder.dataset_num_rows)
 
     return embedding_dir
