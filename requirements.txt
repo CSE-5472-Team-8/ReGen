@@ -1,0 +1,9 @@
+huggingface_hub
+pyfiglet
+python-dotenv
+torch
+openai-clip
+pillow
+torchvision
+datasets
+scikit-learn
