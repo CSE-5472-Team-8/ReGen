@@ -1,4 +1,4 @@
-from CLI.helpers import get_valid_input, confirm_choice
+from cli.helpers import get_valid_input, confirm_choice
 import numpy as np
 from collections import Counter
 

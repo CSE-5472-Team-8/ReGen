@@ -9,7 +9,7 @@ import os
 from datasets import load_dataset
 from huggingface_hub import login
 from dotenv import load_dotenv
-from step_2 import get_dataset_size_rows
+from steps.step_2 import get_dataset_size_rows
 import warnings
 
 class ImageEmbedder:
@@ -75,7 +75,7 @@ class ImageEmbedder:
         except Exception:
             return 0
 
-    def process_images_in_batches(self, batch_size=1000, total_samples=1_000_000):
+    def process_images_in_batches(self, batch_size, total_samples):
         """
         Process images in batches, download and embed them, and save embeddings until the limit is reached.
 

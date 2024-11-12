@@ -1,5 +1,4 @@
-from CLI.helpers import get_valid_input, confirm_choice
-from step_2 import get_dataset_size_bytes
+from cli.helpers import get_valid_input, confirm_choice
 from huggingface_hub import dataset_info
 
 def setup_dataset(dataset_id):
@@ -13,14 +12,12 @@ def setup_dataset(dataset_id):
         dict: A dictionary mapping feature types (e.g., "image", "caption") to confirmed feature names, 
         either detected from the dataset or specified by the user.
     """
-    dataset_size = get_dataset_size_bytes.run(dataset_id)
     dataset_type = select_dataset_type()
+    
     features = fetch_dataset_features(dataset_id)
-
     dataset_feature_types = {
         "1": ["image", "caption"],
-        "2": ["image", "image_url", "caption"],
-        "3": ["image_url", "caption"]
+        "2": ["image_url", "caption"]
     }
 
     feature_types_to_detect = {feature_type: None for feature_type in dataset_feature_types.get(dataset_type, [])}
@@ -45,16 +42,14 @@ def select_dataset_type():
     """
     options = [
         "Images and captions",
-        "Images, image URLs, and captions",
-        "Image URLs and captions",
-        "None of the above (select another dataset and model)"
+        "Image URLs and captions"
     ]
 
     print(f"\nThe dataset contains:")
     for i, option in enumerate(options, start=1):
         print(f"{i}) {option}")
     
-    choice = get_valid_input("\nEnter the dataset type: ", lambda x: x in ["1", "2", "3", "4"])
+    choice = get_valid_input("\nEnter the dataset type: ", lambda x: x in ["1", "2"])
     confirmed_choice = confirm_choice(f"You selected '{options[int(choice)-1]}'. Is this correct?", choice)
     
     return confirmed_choice if confirmed_choice else select_dataset_type()
@@ -182,13 +177,3 @@ def manually_select_features(features):
             features[feature_type] = user_input
 
     return features
-
-
-def determine_execution_mode():
-    """
-    Placeholder function to determine the execution mode based on the dataset type and other factors.
-
-    Returns:
-        None: This function is a placeholder and currently returns None.
-    """
-    return None

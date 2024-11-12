@@ -1,7 +1,7 @@
 import requests
 import os
 from dotenv import load_dotenv
-from CLI.helpers import get_valid_input, confirm_choice
+from cli.helpers import get_valid_input, confirm_choice
 
 def run(dataset_id):
     load_dotenv()
@@ -27,7 +27,7 @@ def run(dataset_id):
         
         # Confirm the user's input
         confirmed_rows = confirm_choice(
-            f"You entered {num_rows} rows. Confirm?", num_rows
+            f"You entered {num_rows} rows. Is that correct?", num_rows
         )
         
         return int(confirmed_rows) if confirmed_rows else None

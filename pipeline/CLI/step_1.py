@@ -1,10 +1,43 @@
-from huggingface_hub import HfApi
-from step_1 import get_model_and_dataset_pairs
 import os
 import csv
-from CLI.helpers import get_valid_input, confirm_choice
+from huggingface_hub import HfApi, login
+from steps.step_1 import get_model_and_dataset_pairs
+from cli.helpers import get_valid_input, confirm_choice
+from dotenv import load_dotenv, set_key
 import pyfiglet
 import shutil
+
+def login_to_huggingface():
+    """
+    Logs into Hugging Face using an access token, handling cases where the token is missing or invalid.
+    
+    This function loads a Hugging Face access token from an environment variable specified in a `.env` file. 
+    If the token is missing or the login attempt fails, it prompts the user to enter a valid token, 
+    saves the new token to the `.env` file, and retries the login process. The loop continues until 
+    a successful login occurs, ensuring that a valid token is always saved in the `.env` file.
+    
+    Environment:
+        - `HUGGINGFACE_TOKEN`: Access token for Hugging Face, loaded from `.env` file in the specified path.
+
+    Raises:
+        - Exception on failed login attempts, prompting the user to re-enter the token.
+    """
+    env_path = "./config/.env"
+    load_dotenv(env_path)
+ 
+    token = os.getenv("HUGGINGFACE_TOKEN")
+    while True:
+        if token is None:
+            token = input("\nPlease enter your Hugging Face access token: ")
+        try:
+            login(token=token)
+            set_key(env_path, "HUGGINGFACE_TOKEN", token)
+            print("\nHugging Face login successful!")
+            break
+        except Exception as e:
+            print(f"\nHugging Face login failed. Please try again.")
+            token = None
+            set_key(env_path, "HUGGINGFACE_TOKEN", "")
 
 def validate_model_id(api, model_id):
     """
@@ -128,31 +161,41 @@ def select_model_and_dataset_from_list(model_dataset_pairs):
         if confirmed:
             return confirmed
 
-def select_model_and_dataset():
+def display_introduction():
     """
-    Guide the user to select a text-to-image model and dataset, either manually or from a pre-defined list.
-
-    Returns:
-        tuple: The selected model ID and dataset ID.
+    Display an introduction to the tool, including ASCII art, description, and disclaimer.
     """
-    api = HfApi()
-
     ascii_art = pyfiglet.figlet_format('ReGen', font='dos_rebel')
 
     print('\nWelcome to\n')
     print(ascii_art.strip())
-    print('\nThis tool performs automated white-box Model Inversion Attacks (MIA) on any HuggingFace text-to-image model.')
-    print('You will need the model ID, the dataset ID it was trained on, an API key with access to both, and any additional information requested by the program.')
+    print('\nThis tool performs automated white-box Model Inversion Attacks (MIA) on any Hugging Face text-to-image model.')
+    print('You will need the model ID, the dataset ID it was trained on, a Hugging Face API key with access to both, and any additional information requested by the program.')
     print('\nDisclaimer: This tool is intended for educational purposes only. It was created to demonstrate the concept of MIAs and should not be used for unauthorized or malicious activities. Please use responsibly.')
 
     console_width = shutil.get_terminal_size((80, 20)).columns
     print("=" * console_width)
 
+
+def select_model_and_dataset():
+    """
+    Guide the user to log in to Hugging Face and select a text-to-image model and dataset, 
+    either manually or from a pre-defined list.
+
+    Returns:
+        tuple: The selected model ID and dataset ID.
+    """
+    display_introduction()
+
+    login_to_huggingface()
+
+    # Prompt user to choose model and dataset selection method
     print("\n1) Manually choose a text-to-image model and dataset.")
     print("2) Select text-to-image model and dataset from list.")
 
     choice = get_valid_input("\nEnter your choice: ", lambda x: x in ["1", "2"])
 
+    api = HfApi()
     if choice == "1":
         while True:
             model_id, dataset_id = manually_select_model_and_dataset_id(api)
@@ -164,3 +207,4 @@ def select_model_and_dataset():
         model_id, dataset_id = select_model_and_dataset_from_list(model_dataset_pairs)
         if model_id and dataset_id:
             return model_id, dataset_id
+

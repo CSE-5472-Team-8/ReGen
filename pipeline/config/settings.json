@@ -1,0 +1,6 @@
+{
+  "clip_embeddings": {
+    "batch_size": 5000
+  },
+  "find_clusters": {}
+}
