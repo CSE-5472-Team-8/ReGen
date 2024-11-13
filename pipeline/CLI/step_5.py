@@ -29,7 +29,7 @@ def display_cluster_details(clusters):
     for cluster_id, items in clusters.items():
         print(f"\nCluster ID: {cluster_id}")
         for item in items:
-            print(item)
+            print(f"{item['index']}) {item['caption']}")
 
 def select_clusters_to_attack(cluster_labels, metadata):
     """Guides the user through selecting clusters to display, with input validation and confirmation."""

@@ -1,33 +1,60 @@
-from diffusers import StableDiffusionPipeline
+import os
+from diffusers import StableDiffusionPipeline, DiffusionPipeline, DPMSolverMultistepScheduler
+from huggingface_hub import model_info
 import torch
 from PIL import Image
 
-def generate_images(model_id, prompts):
+def run(model_id, clusters):
     """
     Generate images from a text-to-image model on Hugging Face using the provided prompts.
     
     Args:
-    - model_id (str): The model ID on Hugging Face (e.g., 'CompVis/stable-diffusion-v1-4').
+    - model_id (str): The model ID on Hugging Face.
     - prompts (list): A list of prompts (strings) for image generation.
     
     Returns:
     - images (list): A list of PIL Image objects generated from the prompts.
     """
-    pipeline = StableDiffusionPipeline.from_pretrained(model_id)
-    pipeline = pipeline.to("cuda" if torch.cuda.is_available() else "cpu")
+    generated_images_dir = f"./data/generated_images/{model_id}"
+    os.makedirs(generated_images_dir, exist_ok=True)
+
+    card_data = model_info(model_id).card_data.to_dict()
+    tags = card_data['tags']
+
+    if 'diffusers' not in tags:
+        print('Model not supported.')
+        return
     
-    generated_images = []
-    
-    for prompt in prompts:
-        image = pipeline(prompt).images[0]
-        generated_images.append(image)
+    pipeline = None
+    if 'lora' in tags and 'base_model' in card_data.keys():
+        base_model_id = card_data['base_model']
         
-    return generated_images
+        print(f"Loading model {base_model_id} with LoRA weights from {model_id}...")
 
-model_id = "CompVis/stable-diffusion-v1-4"
-prompts = ["A sunset over a mountain range", "A futuristic cityscape with flying cars"]
-generated_images = generate_images(model_id, prompts)
+        pipeline = DiffusionPipeline.from_pretrained(base_model_id, torch_dtype=torch.float16)
+        pipeline.scheduler = DPMSolverMultistepScheduler.from_config(pipeline.scheduler.config)
 
-for idx, img in enumerate(generated_images):
-    img.save(f"generated_image_{idx}.png")
-    img.show()
+        if base_model_id != model_id:
+            pipeline.load_lora_weights(model_id)
+        
+        pipeline.to("cuda" if torch.cuda.is_available() else "cpu")
+
+    else:
+        pipeline = StableDiffusionPipeline.from_pretrained(model_id)
+
+    pipeline.to("cuda" if torch.cuda.is_available() else "cpu")
+    
+    for cluster_id, items in clusters.items():
+        cluster_dir = os.path.join(generated_images_dir, f"cluster_{cluster_id}")
+        os.makedirs(cluster_dir, exist_ok=True)
+        for item in items:
+            # careful - index may not exist
+            image_save_path = os.path.join(cluster_dir, f"generated_image_{item['index']}")
+            prompt = item['caption']
+
+            print(f"Generating image for prompt: '{prompt}'")
+            image = pipeline(prompt, num_inference_steps=25).images[0]
+            image.save(image_save_path)
+            print(f"Image saved to {image_save_path}")
+
+run("rjaiswal/sdxl-montresandco-model-lora", [])
