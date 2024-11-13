@@ -7,3 +7,9 @@ pillow
 torchvision
 datasets
 scikit-learn
+accelerate
+peft
+image_similarity_measures
+rasterio
+phasepack
+pyfftw

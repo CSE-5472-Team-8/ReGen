@@ -15,13 +15,13 @@ def run(dataset_id, clusters, feature_names):
     dataset = load_dataset(dataset_id)
 
     for cluster_id, items in clusters.items():
-        cluster_dir = f"./data/clusters/{dataset_id.replace('/', '_')}/cluster_{cluster_id}"
+        cluster_dir = f"./data/clusters/{dataset_id.replace('/', '_')}"
         os.makedirs(cluster_dir, exist_ok=True)
 
         for item in items:
             row_index = item['index']
             data = dataset['train'][row_index]
-            image_filename = f"{cluster_dir}/image_{row_index}.png"
+            image_filename = f"{cluster_dir}/cluster_{cluster_id}.png"
 
             # Check if there's an image URL or an image feature in the dataset
             if 'url' in item and item['url'] is not None:

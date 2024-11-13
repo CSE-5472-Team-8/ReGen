@@ -5,6 +5,7 @@ from steps.step_4 import find_clusters
 from cli.step_5 import select_clusters_to_attack
 from steps.step_6 import get_images_from_dataset
 from steps.step_7 import generate_images
+from steps.step_8 import compare_images
 
 def main():
     """Run the model inversion attack pipeline."""

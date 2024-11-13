@@ -2,5 +2,24 @@
   "clip_embeddings": {
     "batch_size": 5000
   },
-  "find_clusters": {}
+  "find_clusters": {
+    "epsilon": 0.5,
+    "clustering_metric": "euclidean",
+    "min_samples_per_cluster": 2
+  },
+  "image_generation": {
+    "num_generated_images_per_cluster": 100,
+    "num_inference_steps": 25
+  },
+  "image_comparison": {
+    "metric_weights": {
+      "fsim": 0.15,
+      "psnr": 0.25,
+      "rmse": 0.2,
+      "sre": 0.25,
+      "ssim": 0.1,
+      "uiq": 0.05
+    },
+    "memorization_likelihood_threshold": 0.75
+  }
 }

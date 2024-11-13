@@ -2,9 +2,9 @@ import os
 from diffusers import StableDiffusionPipeline, DiffusionPipeline, DPMSolverMultistepScheduler
 from huggingface_hub import model_info
 import torch
-from PIL import Image
+from steps.settings import image_generation_settings
 
-def run(model_id, clusters, num_generated_images_per_cluster=100):
+def run(model_id, clusters):
     """
     Generate images from a text-to-image model on Hugging Face using the provided prompts.
     
@@ -49,7 +49,7 @@ def run(model_id, clusters, num_generated_images_per_cluster=100):
         os.makedirs(cluster_dir, exist_ok=True)
 
         # Generate num_generated_images_per_cluster images for each cluster
-        for i in range(num_generated_images_per_cluster):
+        for i in range(image_generation_settings['num_generated_images_per_cluster']):
             # Cycle through items by using the modulus operator
             item = items[i % len(items)]
             
@@ -59,7 +59,7 @@ def run(model_id, clusters, num_generated_images_per_cluster=100):
             # Generate image for the selected prompt
             prompt = item['caption']
             print(f"\nGenerating image for prompt: '{prompt}'")
-            image = pipeline(prompt, num_inference_steps=25).images[0]
+            image = pipeline(prompt, num_inference_steps=image_generation_settings['num_inference_steps']).images[0]
             image.save(image_save_path)
             print(f"Image saved to {image_save_path}")
 
