@@ -33,6 +33,9 @@ def main():
         generate_images.run(model_id, clusters)
 
         # Step 8: Compare duplicated images with generated images to identify instances of memorized training data.
+        compare_images.run(model_id, dataset_id, clusters)
+    else:
+        print(f"No duplicated images were identified. The dataset '{dataset_id}' is unlikely to introduce MIA risks to the model '{model_id}'.")
 
 if __name__ == "__main__":
     main()

@@ -38,7 +38,6 @@ def select_clusters_to_attack(cluster_labels, metadata):
     total_clusters = count_clusters(cluster_labels)
 
     if total_clusters == 0:
-        print("No clusters found. This model is likely invulnerable to model inversion attacks.")
         return None
 
     while True:

@@ -12,7 +12,7 @@ try:
 except ImportError:
     rasterio = None
 
-from quality_metrics import metric_functions
+from steps.step_8.quality_metrics import metric_functions
 
 logger = logging.getLogger(__name__)
 
