@@ -2,7 +2,7 @@ import os
 import csv
 from huggingface_hub import HfApi, login
 from steps.step_1 import get_model_and_dataset_pairs
-from cli.helpers import get_valid_input, confirm_choice
+from steps.cli_helpers import get_valid_input, confirm_choice
 from dotenv import load_dotenv, set_key
 import pyfiglet
 import shutil
@@ -189,7 +189,6 @@ def select_model_and_dataset():
 
     login_to_huggingface()
 
-    # Prompt user to choose model and dataset selection method
     print("\n1) Manually choose a text-to-image model and dataset.")
     print("2) Select text-to-image model and dataset from list.")
 

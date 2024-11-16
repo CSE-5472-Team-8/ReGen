@@ -21,13 +21,12 @@ class ImageEmbedder:
             embedding_dir (str): Directory path for saving the embeddings.
             feature_names (dict): Feature names to identify images, captions, and URLs in the dataset.
         """
-        # Suppress specific warning related to flash attention
         warnings.filterwarnings("ignore", message=".*not compiled with flash attention.*")
         
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
         self.model, self.preprocess = load("ViT-B/32", device=self.device)
         self.dataset = load_dataset(dataset_id, split="train", streaming=True)
-        self.dataset_num_rows = get_dataset_size_rows.run(dataset_id)
+        self.dataset_num_rows = get_dataset_size_rows(dataset_id)
         self.embedding_dir = embedding_dir
         self.feature_names = feature_names
 
@@ -89,20 +88,13 @@ class ImageEmbedder:
         batch = []
         processed_samples = 0
 
-        scenario = self.determine_scenario()
-
         print("\nDownloading training data...")
         for example_index, example in enumerate(tqdm(self.dataset, total=total_samples)):
-            if scenario == 1 and self.feature_names["image"] in example and self.feature_names["caption"] in example:
+            if self.feature_names["image"] in example and self.feature_names["caption"] in example:
                 image = example[self.feature_names["image"]]
                 caption = example[self.feature_names["caption"]]
                 batch.append({"image": image, "caption": caption, "index": example_index})
-            elif scenario == 2 and all(key in example for key in [self.feature_names["image"], self.feature_names["image_url"], self.feature_names["caption"]]):
-                image = example[self.feature_names["image"]]
-                image_url = example[self.feature_names["image_url"]]
-                caption = example[self.feature_names["caption"]]
-                batch.append({"image": image, "image_url": image_url, "caption": caption, "index": example_index})
-            elif scenario == 3 and self.feature_names["image_url"] in example and self.feature_names["caption"] in example:
+            elif self.feature_names["image_url"] in example and self.feature_names["caption"] in example:
                 image_url = example[self.feature_names["image_url"]]
                 caption = example[self.feature_names["caption"]]
                 batch.append({"image": None, "image_url": image_url, "caption": caption, "index": example_index})
@@ -137,24 +129,7 @@ class ImageEmbedder:
                 if size > 0:
                     processed_samples += 1
 
-    def determine_scenario(self):
-        """
-        Determine the embedding scenario based on the provided feature names.
-
-        Returns:
-            int: Scenario number (1, 2, or 3) based on available features in the dataset.
-        """
-        keys = set(self.feature_names.keys())
-        if keys == {"image", "caption"}:
-            return 1
-        elif keys == {"image", "image_url", "caption"}:
-            return 2
-        elif keys == {"image_url", "caption"}:
-            return 3
-        else:
-            raise ValueError("Invalid combination of feature names.")
-
-def run(dataset_id, feature_names):
+def get_clip_embeddings(dataset_id, feature_names):
     """
     Run the image embedding pipeline on a specified dataset with given feature names.
 

@@ -37,7 +37,7 @@ def find_model_dataset_pairs(api, models):
                 continue
     return model_dataset_pairs
 
-def run():
+def get_model_and_dataset_pairs():
     """
     Main function to execute the process of retrieving text-to-image models and their associated datasets.
 

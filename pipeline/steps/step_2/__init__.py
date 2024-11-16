@@ -1,9 +1,21 @@
 import requests
 import os
 from dotenv import load_dotenv
-from cli.helpers import get_valid_input, confirm_choice
+from steps.cli_helpers import get_valid_input, confirm_choice
 
-def run(dataset_id):
+def get_dataset_size_rows(dataset_id):
+    """
+    Retrieve the number of rows in a dataset using the Hugging Face API.
+    If the API call fails or returns incomplete data, prompt the user for manual input.
+    
+    Args:
+        dataset_id (str): The identifier for the dataset on Hugging Face.
+    
+    Returns:
+        int or None: The number of rows in the dataset, either fetched from the API 
+                     or input manually by the user. Returns None if user input is not confirmed.
+    """
+    
     load_dotenv()
 
     headers = {"Authorization": f"Bearer {os.getenv('HUGGINGFACE_TOKEN')}"}

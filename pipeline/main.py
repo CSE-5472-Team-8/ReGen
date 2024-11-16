@@ -1,8 +1,8 @@
-from cli.step_1 import select_model_and_dataset, display_introduction
-from cli.step_2 import setup_dataset
+from steps.step_1.cli import select_model_and_dataset
+from steps.step_2.cli import setup_dataset
 from steps.step_3 import get_clip_embeddings
 from steps.step_4 import find_clusters
-from cli.step_5 import select_clusters_to_attack
+from steps.step_5.cli import select_clusters_to_attack
 from steps.step_6 import get_images_from_dataset
 from steps.step_7 import generate_images
 from steps.step_8 import compare_images
@@ -17,23 +17,23 @@ def main():
     feature_names = setup_dataset(dataset_id)
 
     # Step 3: Generate CLIP embeddings for all images in the dataset.
-    embedding_dir = get_clip_embeddings.run(dataset_id, feature_names)
+    embedding_dir = get_clip_embeddings(dataset_id, feature_names)
     
     # Step 4: Identify the most duplicated images in the dataset.
-    cluster_labels, embeddings_metadata = find_clusters.run(embedding_dir)
+    cluster_labels, embeddings_metadata = find_clusters(embedding_dir)
     
     # Step 5: Decide which duplicated images to target for the model inversion attack.
     clusters = select_clusters_to_attack(cluster_labels, embeddings_metadata)
 
     if clusters:
         # Step 6: Get the duplicated images from the dataset.
-        get_images_from_dataset.run(dataset_id, clusters, feature_names)
+        get_images_from_dataset(dataset_id, clusters, feature_names)
         
         # Step 7: Using the selected model, generate X images using the caption associated with the most duplicated images.
-        generate_images.run(model_id, clusters)
+        generate_images(model_id, clusters)
 
         # Step 8: Compare duplicated images with generated images to identify instances of memorized training data.
-        compare_images.run(model_id, dataset_id, clusters)
+        compare_images(model_id, dataset_id, clusters)
     else:
         print(f"No duplicated images were identified. The dataset '{dataset_id}' is unlikely to introduce MIA risks to the model '{model_id}'.")
 

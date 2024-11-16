@@ -1,4 +1,4 @@
-from cli.helpers import get_valid_input, confirm_choice
+from steps.cli_helpers import get_valid_input, confirm_choice
 from huggingface_hub import dataset_info
 
 def setup_dataset(dataset_id):
