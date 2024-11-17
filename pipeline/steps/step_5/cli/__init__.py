@@ -30,20 +30,20 @@ def find_largest_clusters(cluster_labels, max_clusters):
     largest_clusters = [cluster_id for cluster_id, _ in cluster_counts.most_common(max_clusters)]
     return largest_clusters
 
-def create_cluster_dict(cluster_labels, metadata, clusters_to_display):
+def create_cluster_dict(cluster_labels, metadata, clusters_to_attack):
     """
     Create a dictionary mapping cluster IDs to metadata for each embedding in the cluster.
     
     Args:
         cluster_labels (np.ndarray): Array of cluster labels assigned to each point.
         metadata (list): Metadata associated with each embedding.
-        clusters_to_display (list): List of cluster IDs to include in the dictionary.
+        clusters_to_attack (list): List of cluster IDs to include in the dictionary.
     
     Returns:
         dict: A dictionary where keys are cluster IDs and values are lists of metadata.
     """
     clusters = {}
-    for cluster_id in clusters_to_display:
+    for cluster_id in clusters_to_attack:
         cluster_id = int(cluster_id)
         clusters[cluster_id] = []
         indices = np.where(cluster_labels == cluster_id)[0]
@@ -64,7 +64,7 @@ def display_cluster_details(clusters):
     for cluster_id, items in clusters.items():
         print(f"\nCluster ID: {cluster_id}")
         for item in items:
-            print(item)
+            print(item['caption'])
 
 def select_clusters_to_attack(cluster_labels, metadata):
     """
@@ -85,16 +85,16 @@ def select_clusters_to_attack(cluster_labels, metadata):
         return None
 
     while True:
-        num_clusters_to_display = int(get_valid_input(
-            f"\nEnter the number of clusters to display (0 - {total_clusters}): ",
+        num_clusters_to_attack = int(get_valid_input(
+            f"\nEnter the number of clusters to attack (0 - {total_clusters}): ",
             lambda value: value.isdigit() and 0 <= int(value) <= total_clusters
         ))
 
-        clusters_to_display = find_largest_clusters(cluster_labels, num_clusters_to_display)
+        clusters_to_attack = find_largest_clusters(cluster_labels, num_clusters_to_attack)
 
         confirmed_clusters = confirm_choice(
-            f"You selected {num_clusters_to_display} clusters to display. Is that correct?",
-            clusters_to_display
+            f"You selected {num_clusters_to_attack} clusters to display. Is that correct?",
+            clusters_to_attack
         )
 
         if confirmed_clusters:

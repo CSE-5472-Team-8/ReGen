@@ -35,7 +35,7 @@ def login_to_huggingface():
             print("\nHugging Face login successful!")
             break
         except Exception as e:
-            print(f"\nHugging Face login failed. Please try again.")
+            print(f"\nHugging Face login failed.")
             token = None
             set_key(env_path, "HUGGINGFACE_TOKEN", "")
 
@@ -171,7 +171,7 @@ def display_introduction():
     print(ascii_art.strip())
     print('\nThis tool performs automated white-box Model Inversion Attacks (MIA) on any Hugging Face text-to-image model.')
     print('You will need the model ID, the dataset ID it was trained on, a Hugging Face API key with access to both, and any additional information requested by the program.')
-    print('\nDisclaimer: This tool is intended for educational purposes only. It was created to demonstrate the concept of MIAs and should not be used for unauthorized or malicious activities. Please use responsibly.')
+    print('\nDisclaimer: This tool is intended for educational purposes only. It was created to demonstrate the concept of MIAs and should not be used for unauthorized or malicious activities.')
 
     console_width = shutil.get_terminal_size((80, 20)).columns
     print("=" * console_width)

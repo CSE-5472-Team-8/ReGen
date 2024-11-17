@@ -1,4 +1,7 @@
 huggingface_hub
+diffusers
+rasterio
+scikit-image
 pyfiglet
 python-dotenv
 torch
@@ -9,7 +12,7 @@ datasets
 scikit-learn
 accelerate
 peft
-image_similarity_measures
-rasterio
 phasepack
 pyfftw
+opencv-python
+phasepack
