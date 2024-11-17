@@ -120,7 +120,7 @@ def generate_images_for_clusters(pipeline, base_dir, clusters):
             prompt = item['caption']
             image_save_path = os.path.join(cluster_dir, f"generated_image_{i}.png")
 
-            print(f"Generating image for prompt: '{prompt}'")
+            print(f"\nGenerating image for prompt: '{prompt}'")
             image = pipeline(prompt, num_inference_steps=num_inference_steps).images[0]
             image.save(image_save_path)
             print(f"Image saved to {image_save_path}")
