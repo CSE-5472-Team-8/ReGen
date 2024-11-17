@@ -93,7 +93,7 @@ def select_clusters_to_attack(cluster_labels, metadata):
         clusters_to_attack = find_largest_clusters(cluster_labels, num_clusters_to_attack)
 
         confirmed_clusters = confirm_choice(
-            f"You selected {num_clusters_to_attack} clusters to display. Is that correct?",
+            f"You selected {num_clusters_to_attack} clusters to attack. Is that correct?",
             clusters_to_attack
         )
 

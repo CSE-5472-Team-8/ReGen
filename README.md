@@ -181,7 +181,7 @@ You won't be asked for input again until the CLIP embeddings have finished gener
 ```
 Enter the number of clusters to attack (0 - 1): 1
 
-You selected 1 clusters to display. Is that correct? (Y/N): y
+You selected 1 clusters to attack. Is that correct? (Y/N): y
 
 Cluster ID: 0
 A professional portrait of a man in a dark suit and blue shirt, with a friendly smile and neatly combed hair against a plain white background.
