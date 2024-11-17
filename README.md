@@ -138,17 +138,17 @@ Is that correct? (Y/N): y
 
 The program will ask you if the dataset you're testing with contains images and captions, or image urls and captions. Some datasets have the images stored directly on Hugging Face, while others only have the URLs of where to find the images.
 
-This is an example of option 1:
-![](example_images/image_and_text_1.png)
-
-And this is an example of option 2:
-![](example_images/url_and_caption_1.png)
-
 ```
 The dataset contains:
 1) Images and captions
 2) Image URLs and captions
 ```
+
+This is an example of option 1:
+![](example_images/image_and_text_1.png)
+
+And this is an example of option 2:
+![](example_images/url_and_caption_1.png)
 
 Next, it will ask you what the names are for the image/image URL and caption features.
 
@@ -240,6 +240,8 @@ pipeline/config/settings.json:
   - **memorization_likelihood_threshold**: The threshold value (out of 1) used to classify an image as memorized based on its similarity score.
 
 ## Examples
+
+TODO - add examples for scenarios where memorization were and weren't found.
 
 ## Credits
 
