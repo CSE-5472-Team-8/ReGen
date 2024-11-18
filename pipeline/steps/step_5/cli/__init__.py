@@ -81,13 +81,12 @@ def select_clusters_to_attack(cluster_labels, metadata):
     total_clusters = count_clusters(cluster_labels)
 
     if total_clusters == 0:
-        print("No clusters found. This model is likely invulnerable to model inversion attacks.")
         return None
 
     while True:
         num_clusters_to_attack = int(get_valid_input(
-            f"\nEnter the number of clusters to attack (0 - {total_clusters}): ",
-            lambda value: value.isdigit() and 0 <= int(value) <= total_clusters
+            f"\nEnter the number of clusters to attack (1 - {total_clusters}): ",
+            lambda value: value.isdigit() and 0 < int(value) <= total_clusters
         ))
 
         clusters_to_attack = find_largest_clusters(cluster_labels, num_clusters_to_attack)

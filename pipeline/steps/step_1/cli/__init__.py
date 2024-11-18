@@ -118,7 +118,7 @@ def load_or_fetch_model_dataset_pairs(file_path):
             return list(csv.reader(file))
     else:
         print("Model ID and dataset ID pairs haven't been fetched yet. Please wait...")
-        model_dataset_pairs = get_model_and_dataset_pairs.run()
+        model_dataset_pairs = get_model_and_dataset_pairs()
         with open(file_path, mode='w', newline='') as file:
             csv.writer(file).writerows(model_dataset_pairs)
         return model_dataset_pairs

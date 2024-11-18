@@ -8,8 +8,6 @@ from steps.step_7 import generate_images
 from steps.step_8 import compare_images
 
 def main():
-    """Run the model inversion attack pipeline."""
-
     # Step 1: Select model and dataset
     model_id, dataset_id = select_model_and_dataset()
     
