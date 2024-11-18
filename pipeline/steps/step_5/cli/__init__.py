@@ -63,8 +63,14 @@ def display_cluster_details(clusters):
     """
     for cluster_id, items in clusters.items():
         print(f"\nCluster ID: {cluster_id}")
-        for item in items:
-            print(item['caption'])
+        for i, item in enumerate(items):
+            if i < 5:
+                print(item['caption'])
+            else:
+                remaining = len(items) - 5
+                if remaining > 0:
+                    print(f"... {remaining} more rows")
+                break
 
 def select_clusters_to_attack(cluster_labels, metadata):
     """
