@@ -146,5 +146,7 @@ def compare_images(model_id, dataset_id, clusters):
         normalized_scores_for_most_similar = {metric: values[most_similar_index] for metric, values in normalized_scores.items()}
         likelihood_score, is_memorized = calculate_memorization_likelihood(normalized_scores_for_most_similar)
 
+        print(normalized_scores_for_most_similar)
+
         print(f"Memorization likelihood score (out of 1): {likelihood_score}")
         print(f"Is the image likely memorized? {'Yes' if is_memorized else 'No'}")
