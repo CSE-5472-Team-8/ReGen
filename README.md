@@ -10,7 +10,6 @@ Although capable of targeting foundational pretrained models like Stable Diffusi
 - [Installation](#installation)
 - [Usage](#usage)
 - [Configuration](#configuration)
-- [Examples](#examples)
 
 ## Installation
 
@@ -239,10 +238,6 @@ pipeline/config/settings.json:
   - **metric_weights**: Specifies the importance/weight of each comparison metric used to evaluate the simularity between generated and training images. MUST sum to 1.
   - **memorization_likelihood_threshold**: The threshold value (out of 1) used to classify an image as memorized based on its similarity score.
 
-## Examples
-
-TODO - add examples for scenarios where memorization were and weren't found.
-
 ## Credits
 
-The code from Nekhtiari's [image-similarity-measures](https://github.com/nekhtiari/image-similarity-measures/blob/master/image_similarity_measures/quality_metrics.py) GitHub repository had to be directly copied to "pipeline/steps/step_8" due to issues with installing via pip. was directly copied to "pipeline/steps/step_8" due to difficulties encountered with installing the package through pip.
+The code from Nekhtiari's [image-similarity-measures](https://github.com/nekhtiari/image-similarity-measures/blob/master/image_similarity_measures/quality_metrics.py) GitHub repository had to be directly copied to "pipeline/steps/step_8" due to issues with installing via pip.
